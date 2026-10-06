@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌾 फसल जानकारी सहायक AI</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,"Noto Sans Devanagari",sans-serif;
+  background:#f2f7f1;
+  color:#193321;
+}
+
+.header{
+  background:linear-gradient(135deg,#176b3a,#3b9d59);
+  color:white;
+  text-align:center;
+  padding:30px 16px;
+}
+
+.header h1{
+  margin:0 0 8px;
+  font-size:30px;
+}
+
+.header p{
+  margin:0;
+}
+
+.container{
+  max-width:900px;
+  margin:20px auto;
+  padding:0 14px;
+}
+
+.card{
+  background:white;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 6px 24px rgba(0,0,0,.08);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+label{
+  display:block;
+  font-weight:700;
+  margin:12px 0 6px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:13px;
+  border:1px solid #cbd8ce;
+  border-radius:10px;
+  font-size:16px;
+}
+
+textarea{
+  min-height:120px;
+  resize:vertical;
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:12px 16px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.primary{
+  width:100%;
+  margin-top:16px;
+  background:#176b3a;
+  color:#fff;
+}
+
+.primary:disabled{
+  opacity:.6;
+}
+
+.quick{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.quick button{
+  background:#e8f5eb;
+  color:#176b3a;
+}
+
+#status{
+  text-align:center;
+  margin-top:12px;
+  color:#657267;
+}
+
+#result{
+  white-space:pre-wrap;
+  line-height:1.8;
+  font-size:16px;
+  min-height:80px;
+}
+
+.note{
+  font-size:13px;
+  color:#68736a;
+  line-height:1.6;
+}
+
+.footer{
+  text-align:center;
+  color:#68736a;
+  font-size:13px;
+  padding:5px 0 30px;
+}
+
+@media(max-width:650px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .header h1{
+    font-size:25px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+<h1>🌾 फसल जानकारी सहायक AI</h1>
+
+<p>
+किसानों के लिए आसान हिंदी में फसल और खेती की जानकारी
+</p>
+
+</header>
+
+
+<main class="container">
+
+
+<section class="card">
+
+<h2>🌱 फसल की जानकारी पूछें</h2>
+
+<p class="note">
+फसल, गाँव/जिला और अपनी समस्या लिखें।
+AI आपको सामान्य खेती संबंधी मार्गदर्शन देगा।
+</p>
+
+
+<div class="grid">
+
+<div>
+
+<label>📍 गाँव / जिला</label>
+
+<input
+id="location"
+placeholder="जैसे: भोपाल, मध्य प्रदेश">
+
+</div>
+
+
+<div>
+
+<label>🌾 फसल</label>
+
+<input
+id="crop"
+placeholder="जैसे: गेहूँ, सोयाबीन, धान">
+
+</div>
+
+</div>
+
+
+<label>🪴 मिट्टी</label>
+
+<select id="soil">
+
+<option>जानकारी नहीं है</option>
+<option>काली मिट्टी</option>
+<option>लाल मिट्टी</option>
+<option>दोमट मिट्टी</option>
+<option>बलुई मिट्टी</option>
+<option>चिकनी मिट्टी</option>
+
+</select>
+
+
+<div class="grid">
+
+<div>
+
+<label>💧 सिंचाई</label>
+
+<select id="irrigation">
+
+<option>जानकारी नहीं है</option>
+<option>बारिश पर निर्भर</option>
+<option>कुआँ</option>
+<option>बोरवेल</option>
+<option>नहर</option>
+<option>ड्रिप</option>
+<option>स्प्रिंकलर</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>🌿 फसल की अवस्था</label>
+
+<select id="stage">
+
+<option>बुवाई से पहले</option>
+<option>बुवाई के समय</option>
+<option>शुरुआती बढ़वार</option>
+<option>फसल की बढ़वार</option>
+<option>फूल/बालियाँ</option>
+<option>कटाई के करीब</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<label>🐛 समस्या / सवाल</label>
+
+<textarea
+id="question"
+placeholder="जैसे: पत्तियों पर पीले धब्बे हैं, क्या कारण हो सकता है?">
+</textarea>
+
+
+<div class="quick">
+
+<button onclick="quickAsk('इस फसल की बुवाई और शुरुआती देखभाल कैसे करें?')">
+🌱 बुवाई
+</button>
+
+<button onclick="quickAsk('इस फसल में सिंचाई कब और कितनी करें?')">
+💧 सिंचाई
+</button>
+
+<button onclick="quickAsk('इस फसल में सामान्य कीट और रोग कौन से होते हैं?')">
+🐛 कीट/रोग
+</button>
+
+<button onclick="quickAsk('इस फसल की अच्छी पैदावार के लिए सामान्य देखभाल बताएं।')">
+🌾 पैदावार
+</button>
+
+</div>
+
+
+<button
+id="askBtn"
+class="primary"
+onclick="askAI()">
+
+🤖 AI से जानकारी लें
+
+</button>
+
+
+<div id="status"></div>
+
+</section>
+
+
+
+<section class="card">
+
+<h2>📋 AI की सलाह</h2>
+
+<div id="result">
+
+आपका सवाल पूछने के बाद यहाँ जवाब दिखाई देगा।
+
+</div>
+
+</section>
+
+
+
+<section class="card">
+
+<h3>⚠️ जरूरी सूचना</h3>
+
+<p class="note">
+
+यह AI सामान्य कृषि मार्गदर्शन के लिए है।
+कीटनाशक, रोग उपचार, उर्वरक की मात्रा या गंभीर
+फसल समस्या में स्थानीय कृषि विशेषज्ञ/कृषि अधिकारी
+से पुष्टि करें।
+
+AI किसी उत्पाद या उपचार की सफलता की गारंटी नहीं देता।
+
+</p>
+
+</section>
+
+
+<div class="footer">
+
+फसल जानकारी सहायक AI • 2026
+
+</div>
+
+</main>
+
+
+<script>
+
+function quickAsk(text){
+
+  document.getElementById("question").value = text;
+
+}
+
+
+async function askAI(){
+
+  const btn =
+    document.getElementById("askBtn");
+
+  const status =
+    document.getElementById("status");
+
+  const result =
+    document.getElementById("result");
+
+
+  const location =
+    document.getElementById("location").value.trim();
+
+  const crop =
+    document.getElementById("crop").value.trim();
+
+  const soil =
+    document.getElementById("soil").value;
+
+  const irrigation =
+    document.getElementById("irrigation").value;
+
+  const stage =
+    document.getElementById("stage").value;
+
+  const question =
+    document.getElementById("question").value.trim();
+
+
+  if(!crop){
+
+    result.textContent =
+      "कृपया फसल का नाम लिखें।";
+
+    return;
+
+  }
+
+
+  if(!question){
+
+    result.textContent =
+      "कृपया अपना सवाल या समस्या लिखें।";
+
+    return;
+
+  }
+
+
+  btn.disabled = true;
+
+  status.textContent =
+    "⏳ AI जानकारी तैयार कर रहा है...";
+
+  result.textContent = "";
+
+
+  const message = `
+
+मैं एक भारतीय किसान हूँ और मुझे खेती के बारे में
+सरल हिंदी में जानकारी चाहिए।
+
+गाँव/जिला:
+${location || "जानकारी नहीं दी गई"}
+
+फसल:
+${crop}
+
+मिट्टी:
+${soil}
+
+सिंचाई:
+${irrigation}
+
+फसल की अवस्था:
+${stage}
+
+मेरा सवाल/समस्या:
+${question}
+
+कृपया मेरी स्थिति के अनुसार व्यावहारिक
+और आसान हिंदी में जवाब दें।
+
+`;
+
+
+  try{
+
+    const response = await fetch(
+      "/api/chat",
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":
+          "application/json"
+        },
+
+        body:JSON.stringify({
+          message:message
+        })
+      }
+    );
+
+
+    const raw =
+      await response.text();
+
+
+    let data;
+
+
+    try{
+
+      data =
+        JSON.parse(raw);
+
+    }catch(e){
+
+      throw new Error(
+        "Server ने JSON के बजाय HTML भेजा। " +
+        "Vercel deployment और /api/chat जाँचें।"
+      );
+
+    }
+
+
+    if(!response.ok){
+
+      throw new Error(
+        data.error ||
+        "Server error"
+      );
+
+    }
+
+
+    result.textContent =
+      data.reply ||
+      "जवाब नहीं मिला।";
+
+
+    status.textContent =
+      "✅ जानकारी तैयार है";
+
+
+  }catch(error){
+
+    console.error(error);
+
+    status.textContent =
+      "❌ जानकारी प्राप्त नहीं हुई";
+
+
+    result.textContent =
+      "समस्या: " +
+      error.message;
+
+  }finally{
+
+    btn.disabled = false;
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
